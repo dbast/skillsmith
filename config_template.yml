@@ -1,0 +1,42 @@
+project:
+  slug: example-channel-skill
+  language: en
+  domain: Example domain
+  output_language: English
+
+source:
+  type: youtube_channel
+  channel_url: https://www.youtube.com/@your-channel
+  subtitle_languages: [en]
+
+paths:
+  raw_subtitles: output/org
+  cleaned_transcripts: output/cleaned_transcripts
+  batches: output/cleaned_transcripts/batches
+  final_skill: output/final_skill/example-channel-skill
+
+batching:
+  target_chars: 300000
+
+models:
+  summarization:
+    provider: openrouter
+    model: minimax/minimax-m2.7
+  skill_builder:
+    provider: openrouter
+    model: anthropic/claude-sonnet-4.5
+
+prompts:
+  system_role: |
+    You are a domain analyst building a source-grounded agent skill from a
+    YouTube channel transcript corpus.
+  source_description: |
+    YouTube channel transcript corpus. Extract practical concepts, examples,
+    terminology, risks, decisions, and procedures that an agent can reuse.
+
+skill:
+  name: example-channel-skill
+  title: Example Channel Skill
+  description: Helps agents use knowledge extracted from the configured YouTube channel.
+  source_channel: Example YouTube channel
+  output_dir: output/final_skill/example-channel-skill
