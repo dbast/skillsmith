@@ -1,0 +1,71 @@
+[project]
+authors = [{name = "Daniel"}]
+dependencies = [
+  "openai>=2.8.0",
+  "pydantic-ai>=2.0.0,<3",
+  "pyyaml",
+  "rich>=13",
+  "typer>=0.25,<0.26",
+  "yt-dlp>=2025.0.0",
+]
+description = "YouTube-channel-to-skill pipeline: fetch transcripts, clean, summarize, and build agent skills."
+name = "skillsmith"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+version = "0.0.1"
+
+[tool.pixi.dependencies]
+openai = ">=2.8.0"
+pydantic-ai = ">=2.0.0,<3"
+python = ">=3.13,<3.14"
+pyyaml = "*"
+rich = ">=13"
+typer = ">=0.25,<0.26"
+yt-dlp = ">=2025.0.0"
+
+[tool.pixi.environments]
+dev = ["test"]
+
+[tool.pixi.feature.test.dependencies]
+prek = ">=0.2.0,<1.0.0"
+pytest = ">=9.0.1,<10"
+pytest-asyncio = ">=1.3.0,<2"
+
+[tool.pixi.feature.test.tasks]
+prek = 'prek run --all-files --color=always'
+test = 'python -m pytest'
+
+[tool.pixi.tasks]
+"config:check" = "python -m skillsmith.config"
+"skill:build" = "python -m skillsmith.skill_build"
+"transcripts:clean" = "python -m skillsmith.transcripts_clean"
+"transcripts:fetch" = "python -m skillsmith.transcripts_fetch"
+"transcripts:process" = "python -m skillsmith.batches_process"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+name = "skillsmith"
+platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 99
+target-version = "py313"
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
+
+[tool.ruff.lint]
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+ignore = ["E501"]
+pycodestyle = {max-line-length = 99}
+# see https://docs.astral.sh/ruff/rules/
+select = ["F", "E", "W", "I", "UP", "A", "Q", "SIM", "S", "PTH", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S"]
